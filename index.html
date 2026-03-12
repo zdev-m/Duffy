@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+<body>
+    
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeGrab - YouTube Downloader</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="gradient-sphere sphere-1"></div>
+        <div class="gradient-sphere sphere-2"></div>
+        <div class="gradient-sphere sphere-3"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fab fa-youtube"></i>
+                <span>TubeGrab</span>
+            </div>
+            <p class="subtitle">Download YouTube videos in HD quality</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Input Section -->
+            <div class="input-section" id="inputSection">
+                <div class="input-wrapper">
+                    <i class="fas fa-link input-icon"></i>
+                    <input type="text" id="videoUrl" placeholder="Paste YouTube URL here..." autocomplete="off">
+                    <button class="paste-btn" onclick="pasteUrl()" title="Paste from clipboard">
+                        <i class="fas fa-paste"></i>
+                    </button>
+                </div>
+                <button class="analyze-btn" onclick="analyzeVideo()">
+                    <span class="btn-text">Analyze Video</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Loading Animation -->
+            <div class="loading-section" id="loadingSection" style="display: none;">
+                <div class="loading-container">
+                    <div class="loading-ring"></div>
+                    <div class="loading-ring"></div>
+                    <div class="loading-ring"></div>
+                    <div class="loading-center">
+                        <i class="fas fa-download"></i>
+                    </div>
+                </div>
+                <p class="loading-text">Fetching video information...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Video Info Section -->
+            <div class="video-info" id="videoInfo" style="display: none;">
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <img id="videoThumbnail" src="" alt="Video Thumbnail">
+                        <div class="duration-badge" id="durationBadge">00:00</div>
+                        <div class="play-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <h2 id="videoTitle" class="video-title">Video Title</h2>
+                        <p id="videoAuthor" class="video-author">Channel Name</p>
+                        <div class="video-stats">
+                            <span><i class="fas fa-eye"></i> <span id="viewCount">0</span> views</span>
+                            <span><i class="fas fa-calendar"></i> <span id="uploadDate">Date</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Options -->
+                <div class="download-options">
+                    <h3><i class="fas fa-download"></i> Select Format</h3>
+                    
+                    <div class="format-tabs">
+                        <button class="tab-btn active" onclick="switchTab('video')">
+                            <i class="fas fa-video"></i> Video
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('audio')">
+                            <i class="fas fa-music"></i> Audio Only
+                        </button>
+                    </div>
+
+                    <!-- Video Formats -->
+                    <div class="formats-grid" id="videoFormats">
+                        <div class="format-card" onclick="selectFormat(this, '1080p')">
+                            <div class="format-quality">1080p</div>
+                            <div class="format-info">HD • MP4</div>
+                            <div class="format-size">~120 MB</div>
+                            <i class="fas fa-check-circle format-check"></i>
+                        </div>
+                        <div class="format-card selected" onclick="selectFormat(this, '720p')">
+                            <div class="format-quality">720p</div>
+                            <div class="format-info">HD • MP4</div>
+                            <div class="format-size">~80 MB</div>
+                            <i class="fas fa-check-circle format-check"></i>
+                        </div>
+                        <div class="format-card" onclick="selectFormat(this, '480p')">
+                            <div class="format-quality">480p</div>
+                            <div class="format-info">SD • MP4</div>
+                            <div class="format-size">~45 MB</div>
+                            <i class="fas fa-check-circle format-check"></i>
+                        </div>
+                        <div class="format-card" onclick="selectFormat(this, '360p')">
+                            <div class="format-quality">360p</div>
+                            <div class="format-info">SD • MP4</div>
+                            <div class="format-size">~25 MB</div>
+                            <i class="fas fa-check-circle format-check"></i>
+                        </div>
+                    </div>
+
+                    <!-- Audio Formats -->
+                    <div class="formats-grid" id="audioFormats" style="display: none;">
+                        <div class="format-card selected" onclick="selectFormat(this, 'mp3-320')">
+                            <div class="format-quality">320kbps</div>
+                            <div class="format-info">High Quality • MP3</div>
+                            <div class="format-size">~12 MB</div>
+                            <i class="fas fa-check-circle format-check"></i>
+                        </div>
+                        <div class="format-card" onclick="selectFormat(this, 'mp3-192')">
+                            <div class="format-quality">192kbps</div>
+                            <div class="format-info">Good Quality • MP3</div>
+                            <div class="format-size">~7 MB</div>
+                            <i class="fas fa-check-circle format-check"></i>
+                        </div>
+                        <div class="format-card" onclick="selectFormat(this, 'mp3-128')">
+                            <div class="format-quality">128kbps</div>
+                            <div class="format-info">Standard • MP3</div>
+                            <div class="format-size">~5 MB</div>
+                            <i class="fas fa-check-circle format-check"></i>
+                        </div>
+                    </div>
+
+                    <button class="download-btn" onclick="startDownload()">
+                        <span class="btn-text">Download Now</span>
+                        <div class="download-progress" id="downloadProgress">
+                            <div class="download-progress-fill" id="downloadProgressFill"></div>
+                        </div>
+                        <span class="download-percent" id="downloadPercent">0%</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage" style="display: none;">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h3>Download Complete!</h3>
+                <p>Your file has been downloaded successfully.</p>
+                <button class="reset-btn" onclick="resetApp()">
+                    <i class="fas fa-redo"></i> Download Another
+                </button>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>⚠️ For educational purposes only. Respect copyright laws.</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="toastMessage">Message</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
